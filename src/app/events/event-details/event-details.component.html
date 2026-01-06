@@ -1,0 +1,42 @@
+<mat-card *ngIf="event">
+  <mat-card-title>{{ event.title }}</mat-card-title>
+  <mat-card-content>
+    <div *ngIf="event.location">{{ event.location }}</div>
+    <div *ngIf="event.startAt">{{ event.startAt }}</div>
+    <div *ngIf="event.description" style="margin-top: 10px;">{{ event.description }}</div>
+
+    <div *ngIf="errorMessage" style="color:#b00020; margin-top: 10px;">{{ errorMessage }}</div>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <ng-container *ngIf="auth.isLoggedIn(); else loginHint">
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="register()"
+        [disabled]="regLoading || !!myReg"
+        *ngIf="!myReg"
+      >
+        Register
+      </button>
+
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="cancel()"
+        [disabled]="regLoading"
+        *ngIf="myReg"
+      >
+        Cancel registration
+      </button>
+
+      <span *ngIf="myReg?.status === 'WAITLIST'" style="margin-left: 12px;">
+        You are on the waitlist.
+      </span>
+    </ng-container>
+
+    <ng-template #loginHint>
+      <a mat-button routerLink="/login">Login to register</a>
+    </ng-template>
+  </mat-card-actions>
+</mat-card>

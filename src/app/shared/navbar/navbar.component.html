@@ -1,0 +1,28 @@
+<mat-toolbar class="nav" color="primary">
+  <div class="nav-inner">
+    <a routerLink="/" class="brand">
+      <span class="logo-dot"></span>
+      <span class="brand-text">Event Management</span>
+    </a>
+
+    <span class="spacer"></span>
+
+    <nav class="links">
+      <a mat-button routerLink="/" class="link">Events</a>
+
+      <ng-container *ngIf="!auth.isLoggedIn(); else loggedIn">
+        <a mat-button routerLink="/login" class="link">Login</a>
+        <a mat-flat-button color="accent" routerLink="/register" class="cta">
+          Register
+        </a>
+      </ng-container>
+      <a mat-button routerLink="/my-registrations" *ngIf="auth.isLoggedIn()">My Registrations</a>
+
+      <ng-template #loggedIn>
+        <button mat-stroked-button (click)="logout()" class="logout">
+          Logout
+        </button>
+      </ng-template>
+    </nav>
+  </div>
+</mat-toolbar>

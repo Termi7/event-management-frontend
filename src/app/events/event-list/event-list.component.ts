@@ -39,22 +39,28 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventService, EventDto } from '../event.service';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-event-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatCardModule, MatProgressSpinnerModule],
-  templateUrl: './event-list.component.html'
+  imports: [CommonModule, RouterLink, MatButtonModule, MatCardModule, MatProgressSpinnerModule],
+  templateUrl: './event-list.component.html',
+  styleUrls: ['./event-list.scss']
 })
 export class EventListComponent implements OnInit {
   loading = false;
   errorMessage = '';
   events: EventDto[] = [];
 
-  constructor(private eventsApi: EventService) {}
+  constructor(
+    private eventsApi: EventService,
+    public auth: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.fetchEvents();

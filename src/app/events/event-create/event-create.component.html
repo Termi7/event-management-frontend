@@ -1,0 +1,66 @@
+<mat-card>
+  <mat-card-title>Create Event</mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()" style="display: grid; gap: 12px; margin-top: 12px;">
+      <mat-form-field appearance="outline">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" />
+      </mat-form-field>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        <mat-form-field appearance="outline">
+          <mat-label>Start date</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Start time</mat-label>
+          <input matInput type="time" formControlName="startTime" />
+        </mat-form-field>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        <mat-form-field appearance="outline">
+          <mat-label>End date</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End time</mat-label>
+          <input matInput type="time" formControlName="endTime" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Capacity</mat-label>
+        <input matInput type="number" min="0" formControlName="capacity" />
+      </mat-form-field>
+
+      <div *ngIf="errorMessage" style="color: #b00020;">{{ errorMessage }}</div>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+        <ng-container *ngIf="!loading; else spinning">Create</ng-container>
+        <ng-template #spinning>
+          <mat-spinner diameter="18"></mat-spinner>
+        </ng-template>
+      </button>
+
+      <a routerLink="/">Back to events</a>
+    </form>
+  </mat-card-content>
+</mat-card>

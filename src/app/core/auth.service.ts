@@ -59,6 +59,8 @@ export interface CurrentUser {
 export interface AuthResponse {
   token: string;
   user?: CurrentUser; // optional depending on backend
+  email?: string;
+  role?: UserRole;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -106,10 +108,20 @@ export class AuthService {
     if (res?.token) {
       localStorage.setItem(this.tokenKey, res.token);
     }
+
     if (res?.user) {
       localStorage.setItem(this.userKey, JSON.stringify(res.user));
       this.userSignal.set(res.user);
+      return;
     }
+
+    // map legacy backend response shape with email/role
+    const fallbackUser: CurrentUser = {
+      email: res?.email ?? '',
+      role: res?.role
+    };
+    localStorage.setItem(this.userKey, JSON.stringify(fallbackUser));
+    this.userSignal.set(fallbackUser);
   }
 
   private loadUserFromStorage(): CurrentUser | null {

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { ToastService } from '../../shared/toast.service';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,7 +34,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -51,10 +53,12 @@ export class RegisterComponent {
       next: () => {
         this.loading = false;
         this.router.navigateByUrl('/');
+        this.toast.success('Account created');
       },
       error: (err) => {
         this.loading = false;
         this.errorMessage = err?.error?.message || 'Registration failed';
+        this.toast.error(this.errorMessage);
       }
     });
   }

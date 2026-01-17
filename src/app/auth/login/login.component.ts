@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { ToastService } from '../../shared/toast.service';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -35,7 +36,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: ToastService
   ) {this.form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
@@ -50,10 +52,12 @@ export class LoginComponent {
       next: () => {
         this.loading = false;
         this.router.navigateByUrl('/');
+        this.toast.success('Logged in');
       },
       error: (err) => {
         this.loading = false;
         this.errorMessage = err?.error?.message || 'Login failed';
+        this.toast.error(this.errorMessage);
       }
     });
   }

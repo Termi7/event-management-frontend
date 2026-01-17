@@ -43,7 +43,7 @@
 //   }
 // }
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -72,21 +72,43 @@ export class EventDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private eventsApi: EventService,
     private regApi: RegistrationService,
+    private cd: ChangeDetectorRef,
     public auth: AuthService
   ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!id) return;
+    if (!id) {
+      this.errorMessage = 'Invalid event';
+      return;
+    }
     this.loadEvent(id);
     if (this.auth.isLoggedIn()) this.loadMyReg(id);
   }
 
   private loadEvent(id: number) {
+    console.info('[event-details] loading event', id);
     this.loading = true;
+    this.errorMessage = '';
     this.eventsApi.getEventById(id).subscribe({
-      next: (e) => { this.event = e; this.loading = false; },
-      error: () => { this.errorMessage = 'Failed to load event'; this.loading = false; }
+      next: (e) => {
+        this.loading = false;
+        if (!e) {
+          this.errorMessage = 'Event not found';
+          this.event = null;
+        } else {
+          console.info('[event-details] loaded event', e);
+          this.event = e;
+        }
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('[event-details] load failed', err);
+        this.loading = false;
+        this.errorMessage = err?.error?.message || 'Failed to load event';
+        this.event = null;
+        this.cd.detectChanges();
+      }
     });
   }
 

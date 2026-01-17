@@ -31,6 +31,11 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent)
   },
   {
+    path: 'events/new',
+    canActivate: [authGuard],
+    loadComponent: () => import('./events/event-create/event-create.component').then(m => m.EventCreateComponent)
+  },
+  {
     path: 'events/:id',
     loadComponent: () => import('./events/event-details/event-details.component').then(m => m.EventDetailsComponent)
   },

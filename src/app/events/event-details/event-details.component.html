@@ -1,11 +1,17 @@
-<mat-card *ngIf="event">
+<div *ngIf="loading" style="display: flex; justify-content: center; padding: 24px;">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="!loading && errorMessage" style="color:#b00020; margin: 12px 0;">
+  {{ errorMessage }}
+</div>
+
+<mat-card *ngIf="!loading && event">
   <mat-card-title>{{ event.title }}</mat-card-title>
   <mat-card-content>
     <div *ngIf="event.location">{{ event.location }}</div>
     <div *ngIf="event.startAt">{{ event.startAt }}</div>
     <div *ngIf="event.description" style="margin-top: 10px;">{{ event.description }}</div>
-
-    <div *ngIf="errorMessage" style="color:#b00020; margin-top: 10px;">{{ errorMessage }}</div>
   </mat-card-content>
 
   <mat-card-actions>
